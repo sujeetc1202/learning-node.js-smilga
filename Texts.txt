@@ -1,0 +1,5 @@
+ API vs SSR
+
+API - JSON          SSR - Template
+API - send Data     SSR - send Template
+API - res.json()    SSR - res.render()
