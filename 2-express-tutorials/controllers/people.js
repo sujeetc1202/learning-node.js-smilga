@@ -1,15 +1,10 @@
-const express = require("express");
-const router = express.Router();
-
 let { people } = require("../data");
 
-// we will remove "/api/people" because now this becomes home route for people-route
-router.get("/", (req, res) => {
+const getPeople = (req, res) => {
   res.status(200).json({ success: true, data: people });
-});
+};
 
-// using javascript
-router.post("/", (req, res) => {
+const createPerson = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -19,21 +14,19 @@ router.post("/", (req, res) => {
   }
 
   res.status(201).send({ success: true, person: name });
-});
+};
 
-router.post("/postman", (req, res) => {
+const createPersonPostman = (req, res) => {
   const { name } = req.body;
-  console.log("hello");
   if (!name) {
     return res
       .status(400)
       .json({ success: false, msg: "please provide name value" });
   }
   res.status(201).send({ success: true, data: [...people, name] });
-});
+};
 
-// PUT method
-router.put("/:id", (req, res) => {
+const updatePerson = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -53,9 +46,9 @@ router.put("/:id", (req, res) => {
   });
 
   res.status(200).json({ success: true, data: newPeople });
-});
+};
 
-router.delete("/:id", (req, res) => {
+const deletePerson = (req, res) => {
   const person = people.find((person) => person.id === Number(req.params.id));
 
   if (!person) {
@@ -68,33 +61,12 @@ router.delete("/:id", (req, res) => {
     (person) => person.id !== Number(req.params.id)
   );
   return res.status(200).json({ success: true, data: newPeople });
-});
+};
 
-module.exports = router;
-
-
-
-// simplified :
-
-// const express = require("express");
-// const router = express.Router();
-
-const {
+module.exports = {
   getPeople,
   createPerson,
   createPersonPostman,
   updatePerson,
   deletePerson,
-} = require("../controllers/people");
-
-// router.get("/", getPeople);
-// router.post("/", createPerson);
-// router.post("/postman", createPersonPostman);
-// router.put("/:id", updatePerson); // PUT method
-// router.delete("/:id", deletePerson);
-
-router.route("/").get(getPeople).post(createPerson);
-router.route("/postman").post(createPersonPostman);
-router.route("/:id").put(updatePerson).delete(deletePerson);
-
-module.exports = router;
+};
